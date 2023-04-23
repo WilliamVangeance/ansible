@@ -1,0 +1,15 @@
+---
+ - hosts: all
+   become: yes
+   tasks:
+
+    - name: update repository index
+      yum: 
+       update_cache: yes
+       state: latest
+
+    - name: install apache package
+      yum: 
+       state: latest
+
+...
