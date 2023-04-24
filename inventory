@@ -1,8 +1,8 @@
-[local-VM's]
+[localMachines]
 192.168.188.132
 192.168.188.128
 
-[amazon-linux]
+[amazonLlinux]
 65.2.125.139
 
 [ubuntu]
