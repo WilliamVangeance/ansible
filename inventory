@@ -1,9 +1,8 @@
 [localMachines]
-192.168.188.132	apache_package=httpd php_package=php
-192.168.188.128 apache_package=httpd php_package=php
+192.168.188.132	
+192.168.188.128 
 
-[amazonLlinux]
-65.0.94.77	apache_package=httpd php_package=php
+[web_servers]
+52.66.201.165		#amazonLlinux	
+13.232.148.66		#ubuntu
 
-[ubuntu]
-13.126.139.85   apache_package=apache2 php_package=libapache2-mod-php
