@@ -3,25 +3,12 @@
    become: yes
    tasks:
 
-    - name: installing httpd and php packages for Redhat and Amazon serveres
-      yum:
+    - name: installing httpd and php packages
+      package:
        name: 
-         - httpd
-         - php
+         - "{{ apache_package }}"
+         - "{{ php_package }}"
        state: latest
        update_cache: yes
-      when: ansible_distribution == [["RedHat" , "Amazon"]]
-
-
-
-    - name: installng apache and php support for apache for Ubuntu
-      apt:
-       name: 
-         - apache2
-         - libapache2-mod-php 
-       state: latest
-       update_cache: yes
-      when: ansible_distribution == "Ubuntu"
-      
 
 ...
