@@ -9,17 +9,14 @@
        state: latest
       when: ansible_distribution in [["RedHat" , "Amazon"]]
 
-    - name: install httpd package
+    - name: installing httpd and php packages
       yum:
-       name: httpd
+       name: 
+         - httpd
+         - php
        state: latest
       when: ansible_distribution == [["RedHat" , "Amazon"]]
 
-    - name: adding php support 
-      yum: 
-       name: php
-       state: latest
-      when: ansible_distribution == [["RedHat" , "Amazon"]]
 
     - name: update repository index
       apt:
@@ -27,16 +24,13 @@
        state: latest
       when: ansible_distribution == "Ubuntu"
 
-    - name: install apache package
+    - name: installng apache and php support for apache
       apt:
-       name: apache2
+       name: 
+         - apache2
+         - libapache2-mod-php 
        state: latest
       when: ansible_distribution == "Ubuntu"
       
-    - name: adding php support
-      apt:
-       name: libapache2-mod-php
-       state: latest
-      when: ansible_distribution == "Ubuntu"
 
 ...
