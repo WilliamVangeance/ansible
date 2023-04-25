@@ -6,12 +6,14 @@
    pre_tasks:
 
     - name: install updates ( local and amazon linux )
+      tags: always
       dnf: 
        update_only: yes
        update_cache: yes
       when: ansible_distribution in [[ "Amazon","RedHat" ]] 
 
     - name: install updates ( ubuntu )
+      tags: always
       apt:
        upgrade: dist
        update_cache: yes
@@ -23,6 +25,7 @@
    tasks:
 
     - name: installing httpd and php packages for amazon linux servers
+      tags: http,httpd,php,amazon
       dnf:
        name: 
           - httpd
@@ -31,6 +34,7 @@
       when: ansible_distribution == "Amazon"
 
     - name: installing apache and php packages for Ubuntu servers
+      tags: apache,apache2,ubuntu
       apt:
         name: 
           - apache2
@@ -44,6 +48,7 @@
    tasks: 
 
     - name: install mariadb package (Rhel9)
+      tags: db,mariadb,redhat
       dnf:
         name: mariadb
         state: latest
