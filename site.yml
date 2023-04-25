@@ -38,4 +38,15 @@
         state: latest
       when: ansible_distribution == "Ubuntu"
 
+
+ - hosts: db_servers      
+   become: yes
+   tasks: 
+
+    - name: install mariadb package (Rhel9)
+      dnf:
+        name: mariadb
+        state: latest
+      when: ansible_distribution == "RedHat"
+
 ...
