@@ -60,6 +60,23 @@
        enabled: yes 
       when: ansible_distribution == "Amazon"
 
+    - name: change email address for admin
+      tags: http,httpd,amazon
+      lineinfile:
+       path: /etc/httpd/conf/httpd.conf
+       regexp: '^ServerAdmin'     
+       line: ServerAdmin somebody@somewhere.net
+      when: ansible_distribution == "Amazon"
+      register: httpd
+
+    - name: restarting httpd (Amazon)
+      tags: http,httpd,amazon
+      service:
+        name: httpd
+        state: restarted
+      when: httpd.changed
+
+
     - name: installing apache and php packages for Ubuntu servers
       tags: apache,apache2,ubuntu
       apt:
@@ -68,7 +85,7 @@
           - libapache2-mod-php  
         state: latest
       when: ansible_distribution == "Ubuntu"
-
+        
     - name: copy default html file for site
       tags: apache,apache2,http,httpd,copy
       copy: 
