@@ -52,6 +52,14 @@
        state: latest
       when: ansible_distribution == "Amazon"
 
+    - name: starting httpd service
+      tags: service,enabled,http,httpd,redhat,amazon
+      service:
+       name: httpd 
+       state: started
+       enabled: yes 
+      when: ansible_distribution == "Amazon"
+
     - name: installing apache and php packages for Ubuntu servers
       tags: apache,apache2,ubuntu
       apt:
