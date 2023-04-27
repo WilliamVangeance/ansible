@@ -1,0 +1,55 @@
+- name: installing httpd and php packages for amazon linux servers
+  tags: http,httpd,php,amazon
+  dnf:
+    name:
+     - httpd
+     - php
+    state: latest
+  when: ansible_distribution == "Amazon"
+
+  
+- name: starting httpd service
+  tags: service,enabled,http,httpd,redhat,amazon
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+  when: ansible_distribution == "Amazon"
+
+- name: change email address for admin
+  tags: http,httpd,amazon
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^ServerAdmin'
+    line: ServerAdmin somebody@somewhere.net
+  when: ansible_distribution == "Amazon"
+  register: httpd
+
+- name: restarting httpd (Amazon)
+  tags: http,httpd,amazon
+  service:
+    name: httpd
+    state: restarted
+  when: httpd.changed
+
+
+- name: installing apache and php packages for Ubuntu servers
+  tags: apache,apache2,ubuntu
+  apt:
+    name:
+      - apache2
+      - libapache2-mod-php
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+
+- name: copy default html file for site
+  tags: apache,apache2,http,httpd,copy
+  copy:
+    src: default_site.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+
+
