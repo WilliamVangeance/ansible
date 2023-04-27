@@ -19,6 +19,30 @@
        update_cache: yes
       when: ansible_distribution == "Ubuntu" 
 
+ - hosts: all
+   become: yes
+   tasks:
+
+    - name: creating user william
+      user:
+        name: william
+        groups: root
+
+    - name: adding ssh key for william
+      tags: always
+      authorized_key:
+        user: william
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJTIb4nrSwNU/vM12cKBvheHa1eDxFLxi6MLo5OAtSP/ ansible key"
+
+    - name: adding sudoers file for william
+      tags: always
+      copy:
+        src: sudoer_william
+        dest: /etc/sudoers.d/william
+        owner: root
+        group: root
+        mode: 0440
+
  - hosts: workstations
    become: yes
    tasks:
