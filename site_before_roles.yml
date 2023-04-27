@@ -1,0 +1,120 @@
+---
+
+ - hosts: all
+   become: yes
+   tasks:
+   pre_tasks:
+
+    - name: updating repo cache ( local and amazon linux )
+      tags: always
+      dnf: 
+       update_cache: yes
+      changed_when: false
+      when: ansible_distribution in [[ "Amazon","RedHat" ]] 
+
+    - name: updating repo cache ( ubuntu )
+      tags: always
+      apt:
+       update_cache: yes
+      changed_when: false
+      when: ansible_distribution == "Ubuntu" 
+
+ - hosts: all
+   become: yes
+   tasks:
+
+    - name: adding ssh key for william
+      tags: always
+      authorized_key:
+        user: william
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJTIb4nrSwNU/vM12cKBvheHa1eDxFLxi6MLo5OAtSP/ ansible key"
+
+ - hosts: workstations
+   become: yes
+   tasks:
+
+    - name: install unzip
+      tags: wks
+      package:
+       name: unzip
+    
+    - name: install terraform
+      tags: wks
+      unarchive:
+        src: https://releases.hashicorp.com/terraform/1.4.5/terraform_1.4.5_linux_amd64.zip
+        dest: /usr/local/bin
+        remote_src: yes
+        mode: 0755
+        owner: root
+        group: root 
+        
+
+ - hosts: web_servers
+   become: true
+   tasks:
+
+    - name: installing httpd and php packages for amazon linux servers
+      tags: http,httpd,php,amazon
+      dnf:
+       name: 
+          - httpd
+          - php
+       state: latest
+      when: ansible_distribution == "Amazon"
+
+    - name: starting httpd service
+      tags: service,enabled,http,httpd,redhat,amazon
+      service:
+       name: httpd 
+       state: started
+       enabled: yes 
+      when: ansible_distribution == "Amazon"
+
+    - name: change email address for admin
+      tags: http,httpd,amazon
+      lineinfile:
+       path: /etc/httpd/conf/httpd.conf
+       regexp: '^ServerAdmin'     
+       line: ServerAdmin somebody@somewhere.net
+      when: ansible_distribution == "Amazon"
+      register: httpd
+
+    - name: restarting httpd (Amazon)
+      tags: http,httpd,amazon
+      service:
+        name: httpd
+        state: restarted
+      when: httpd.changed
+
+
+    - name: installing apache and php packages for Ubuntu servers
+      tags: apache,apache2,ubuntu
+      apt:
+        name: 
+          - apache2
+          - libapache2-mod-php  
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+        
+    - name: copy default html file for site
+      tags: apache,apache2,http,httpd,copy
+      copy: 
+        src: default_site.html
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: 0644 
+
+
+ - hosts: db_servers      
+   become: yes
+   tasks: 
+
+    - name: install mariadb package (Rhel9)
+      tags: db,mariadb,redhat
+      dnf:
+        name: mariadb
+        state: latest
+      when: ansible_distribution == "RedHat"
+
+...
