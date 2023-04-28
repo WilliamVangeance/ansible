@@ -1,20 +1,17 @@
-- name: installing httpd and php packages for amazon linux servers
-  tags: http,httpd,php,amazon
-  dnf:
+- name: installing apache and php packages
+  tags: http,httpd,php,amazon,apache
+  package:   
     name:
-     - httpd
-     - php
+     - "{{ apache_package_name }}"
+     - "{{ php_package_name }}"
     state: latest
-  when: ansible_distribution == "Amazon"
-
   
-- name: starting httpd service
+- name: start and enable apache service
   tags: service,enabled,http,httpd,redhat,amazon
   service:
-    name: httpd
+    name: "{{ apache_service }}"
     state: started
     enabled: yes
-  when: ansible_distribution == "Amazon"
 
 - name: change email address for admin
   tags: http,httpd,amazon
@@ -23,15 +20,7 @@
     regexp: '^ServerAdmin'
     line: ServerAdmin somebody@somewhere.net
   when: ansible_distribution == "Amazon"
-  register: httpd
-
-- name: restarting httpd (Amazon)
-  tags: http,httpd,amazon
-  service:
-    name: httpd
-    state: restarted
-  when: httpd.changed
-
+  notify: restart_apache
 
 - name: installing apache and php packages for Ubuntu servers
   tags: apache,apache2,ubuntu

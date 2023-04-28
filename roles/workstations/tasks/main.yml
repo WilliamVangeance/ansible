@@ -2,6 +2,7 @@
   tags: wks
   package:
     name: unzip
+    state: present
 
 - name: install terraform
   tags: wks
