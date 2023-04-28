@@ -1,14 +1,14 @@
 [localMachines]
-192.168.188.132	
-192.168.188.128 
-
+server1rhel9
+server2rhel9
+	
 [web_servers]
-52.66.201.165		#amazonLlinux	
-13.232.148.66		#ubuntu
+server4amazon
+server5ubuntu
 
 [db_servers]
-192.168.188.132
-192.168.188.128
+server1rhel9
+server2rhel9
 
 [workstations]
-192.168.188.131
+server3centos
